@@ -13,8 +13,8 @@
 
 // TODO: REEMPLAZA ESTOS VALORES CON LOS TUYOS
 const SUPABASE_CONFIG = {
-  url: 'https://tu-proyecto.supabase.co',  // SIN barra al final
-  key: 'tu-clave-anonima-publica-aqui'
+  url: 'https://aoogaytjhsgonzctprhx.supabase.co',  // SIN barra al final
+  key: 'sb_publishable_T1hhSHAVSMN_Lt9sZ6jCAg_3SXjOPA0'
 };
 
 // Validar que se hayan configurado las credenciales
