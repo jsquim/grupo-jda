@@ -14,7 +14,7 @@
 // TODO: REEMPLAZA ESTOS VALORES CON LOS TUYOS
 const SUPABASE_CONFIG = {
   url: 'https://aoogaytjhsgonzctprhx.supabase.co',  // SIN barra al final
-  key: 'sb_publishable_T1hhSHAVSMN_Lt9sZ6jCAg_3SXjOPA0'
+  key: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFvb2dheXRqaHNnb256Y3Rwcmh4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg1MTA1NjgsImV4cCI6MjA4NDA4NjU2OH0.NYTQJKEkjHVazLOyEVop84jh1pchoq_vwfZkyxbY6Fo'
 };
 
 // Validar que se hayan configurado las credenciales
