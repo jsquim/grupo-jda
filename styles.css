@@ -143,63 +143,7 @@ textarea {
     margin-top: 5px;
 }
 
-/* ==================== SLIDER INPUTS ==================== */
-.slider-container {
-    margin-top: 10px;
-}
-
-input[type="range"] {
-    width: 100%;
-    height: 6px;
-    border-radius: 5px;
-    background: #e0e0e0;
-    outline: none;
-    padding: 0;
-    margin: 15px 0;
-    cursor: pointer;
-}
-
-input[type="range"]::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    background: var(--primary-color);
-    cursor: pointer;
-    transition: var(--transition);
-}
-
-input[type="range"]::-webkit-slider-thumb:hover {
-    transform: scale(1.2);
-    box-shadow: 0 0 0 8px rgba(102, 126, 234, 0.2);
-}
-
-input[type="range"]::-moz-range-thumb {
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    background: var(--primary-color);
-    cursor: pointer;
-    border: none;
-}
-
-.slider-value {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 5px;
-}
-
-.slider-value span {
-    font-size: 0.9rem;
-    color: #666;
-}
-
-.slider-value strong {
-    font-size: 1.1rem;
-    color: var(--primary-color);
-}
+/* Slider inputs eliminados */
 
 /* ==================== ALERTAS ==================== */
 .alert {
@@ -491,6 +435,56 @@ tr:last-child td {
 .badge-info {
     background: #d1ecf1;
     color: #0c5460;
+}
+
+/* ==================== MODAL ==================== */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    animation: fadeIn 0.3s ease;
+}
+
+.modal.show {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background: white;
+    padding: 30px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--card-shadow);
+    max-width: 500px;
+    width: 90%;
+    animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.modal-content h3 {
+    color: var(--primary-color);
+    margin-bottom: 15px;
+}
+
+.modal-content p {
+    color: #666;
+    margin-bottom: 20px;
 }
 
 /* ==================== RESPONSIVE ==================== */
