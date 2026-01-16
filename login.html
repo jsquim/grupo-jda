@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar Sesión - Grupo JDA</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .login-container {
+            max-width: 450px;
+            width: 100%;
+        }
+        
+        .login-card {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .logo h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .logo p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .tabs {
+            display: flex;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        
+        .tab {
+            flex: 1;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            font-weight: 600;
+            color: #999;
+            transition: all 0.3s;
+            border-bottom: 3px solid transparent;
+            margin-bottom: -2px;
+        }
+        
+        .tab.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .divider {
+            text-align: center;
+            margin: 20px 0;
+            color: #999;
+            position: relative;
+        }
+        
+        .divider::before,
+        .divider::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 40%;
+            height: 1px;
+            background: #e0e0e0;
+        }
+        
+        .divider::before {
+            left: 0;
+        }
+        
+        .divider::after {
+            right: 0;
+        }
+        
+        .link-button {
+            background: none;
+            border: none;
+            color: #667eea;
+            cursor: pointer;
+            font-size: 0.9rem;
+            text-decoration: underline;
+            padding: 0;
+            margin-top: 15px;
+        }
+        
+        .link-button:hover {
+            color: #5568d3;
+        }
+        
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-card">
+            <div class="logo">
+                <h1>💰 Grupo JDA</h1>
+                <p>Sistema de Gestión de Ahorros y Préstamos</p>
+            </div>
+            
+            <div id="alert" class="alert"></div>
+            <div id="successMessage" class="success-message" style="display: none;"></div>
+            
+            <!-- Tabs -->
+            <div class="tabs">
+                <div class="tab active" onclick="cambiarTab('login')">Iniciar Sesión</div>
+                <div class="tab" onclick="cambiarTab('registro')">Registrarse</div>
+            </div>
+            
+            <!-- Login Form -->
+            <div id="loginTab" class="tab-content active">
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="loginEmail">📧 Correo electrónico</label>
+                        <input 
+                            type="email" 
+                            id="loginEmail" 
+                            required
+                            placeholder="tu@email.com"
+                        >
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="loginPassword">🔒 Contraseña</label>
+                        <input 
+                            type="password" 
+                            id="loginPassword" 
+                            required
+                            placeholder="Tu contraseña"
+                        >
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">
+                        🚀 Iniciar Sesión
+                    </button>
+                    
+                    <div style="text-align: center;">
+                        <button type="button" class="link-button" onclick="mostrarRecuperacion()">
+                            ¿Olvidaste tu contraseña?
+                        </button>
+                    </div>
+                </form>
+            </div>
+            
+            <!-- Registro Form -->
+            <div id="registroTab" class="tab-content">
+                <form id="registroForm">
+                    <div class="form-group">
+                        <label for="regNombre">👤 Nombre completo</label>
+                        <input 
+                            type="text" 
+                            id="regNombre" 
+                            required
+                            placeholder="Juan Pérez"
+                        >
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="regEmail">📧 Correo electrónico</label>
+                        <input 
+                            type="email" 
+                            id="regEmail" 
+                            required
+                            placeholder="tu@email.com"
+                        >
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="regPassword">🔒 Contraseña</label>
+                        <input 
+                            type="password" 
+                            id="regPassword" 
+                            required
+                            placeholder="Mínimo 6 caracteres"
+                            minlength="6"
+                        >
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="regPasswordConfirm">🔒 Confirmar contraseña</label>
+                        <input 
+                            type="password" 
+                            id="regPasswordConfirm" 
+                            required
+                            placeholder="Repite tu contraseña"
+                            minlength="6"
+                        >
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">
+                        ✅ Registrarse
+                    </button>
+                </form>
+            </div>
+            
+            <div class="divider">o</div>
+            
+            <button type="button" class="btn btn-secondary" style="width: 100%;" onclick="window.location.href='index.html'">
+                🧮 Ir al Simulador (Sin registro)
+            </button>
+        </div>
+        
+        <!-- Loading -->
+        <div id="loadingSpinner" style="display: none; text-align: center; margin-top: 20px;">
+            <div class="spinner"></div>
+            <p>Procesando...</p>
+        </div>
+    </div>
+    
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase.js"></script>
+    <script src="auth.js"></script>
+</body>
+</html>
