@@ -1,10 +1,10 @@
 // ============================================
-// SIMULADOR.JS - ACTUALIZADO CON SUPABASE
+// SIMULADOR.JS - CON MODAL DE IDENTIFICACIÓN
 // ============================================
 
 const CONFIG = {
-    TASA_ANUAL: 0.11,
-    TASA_MENSUAL: 0.11 / 12,
+    TASA_ANUAL: 0.10,
+    TASA_MENSUAL: 0.10 / 12,
     MONTO_MAXIMO: 4000,
     PLAZO_MAXIMO: 36,
     DIAS_PRIMERA_CUOTA: 45,
@@ -12,131 +12,118 @@ const CONFIG = {
 };
 
 let simulacionActual = null;
-let sociosData = [];
 
 // ============================================
-// INICIALIZACIÓN CON SUPABASE
+// INICIALIZACIÓN
 // ============================================
 
-document.addEventListener('DOMContentLoaded', async () => {
-    await cargarSocios();
+document.addEventListener('DOMContentLoaded', () => {
     setupEventListeners();
 });
 
 function setupEventListeners() {
     document.getElementById('simuladorForm').addEventListener('submit', simularPrestamo);
-    document.getElementById('btnEnviar').addEventListener('click', enviarAprobacion);
+    document.getElementById('btnEnviar').addEventListener('click', abrirModalSocio);
+    document.getElementById('btnConfirmarSocio').addEventListener('click', enviarAprobacion);
+    document.getElementById('btnCancelarModal').addEventListener('click', cerrarModalSocio);
     
+    // Validaciones en tiempo real
     document.getElementById('monto').addEventListener('input', validarMonto);
     document.getElementById('plazo').addEventListener('input', validarPlazo);
-}
-
-// ============================================
-// CARGAR SOCIOS DESDE SUPABASE
-// ============================================
-
-async function cargarSocios() {
-    try {
-        mostrarCargando(true);
-        
-        const resultado = await db.obtenerSocios();
-        
-        if (resultado.success) {
-            sociosData = resultado.data;
-            
-            const select = document.getElementById('socioSelect');
-            select.innerHTML = '<option value="">Seleccionar socio...</option>';
-            
-            sociosData.forEach(socio => {
-                const option = document.createElement('option');
-                option.value = socio.id;
-                option.textContent = `${socio.nombre_completo} (${socio.cedula})`;
-                select.appendChild(option);
-            });
-        } else {
-            mostrarAlerta('Error al cargar socios: ' + resultado.error, 'error');
+    
+    // Cerrar modal al hacer clic fuera
+    document.getElementById('modalSocio').addEventListener('click', (e) => {
+        if (e.target.id === 'modalSocio') {
+            cerrarModalSocio();
         }
-    } catch (error) {
-        console.error('Error:', error);
-        mostrarAlerta('Error de conexión con la base de datos', 'error');
-    } finally {
-        mostrarCargando(false);
-    }
+    });
 }
 
 // ============================================
-// VALIDACIONES (sin cambios)
+// VALIDACIONES
 // ============================================
 
 function validarMonto(e) {
-    const monto = parseFloat(e.target.value);
+    let valor = parseFloat(e.target.value);
     
-    if (monto > CONFIG.MONTO_MAXIMO) {
-        mostrarAlerta(`El monto máximo permitido es $${CONFIG.MONTO_MAXIMO}`, 'error');
+    if (valor > CONFIG.MONTO_MAXIMO) {
         e.target.value = CONFIG.MONTO_MAXIMO;
+        mostrarAlerta(`⚠️ El monto máximo es $${CONFIG.MONTO_MAXIMO}`, 'warning');
+    } else if (valor < 0) {
+        e.target.value = 100;
     } else {
         ocultarAlerta();
     }
 }
 
 function validarPlazo(e) {
-    const plazo = parseInt(e.target.value);
+    let valor = parseInt(e.target.value);
     
-    if (plazo > CONFIG.PLAZO_MAXIMO) {
-        mostrarAlerta(`El plazo máximo permitido es ${CONFIG.PLAZO_MAXIMO} meses`, 'error');
+    if (valor > CONFIG.PLAZO_MAXIMO) {
         e.target.value = CONFIG.PLAZO_MAXIMO;
+        mostrarAlerta(`⚠️ El plazo máximo es ${CONFIG.PLAZO_MAXIMO} meses`, 'warning');
+    } else if (valor < 0) {
+        e.target.value = 1;
     } else {
         ocultarAlerta();
     }
 }
 
-function mostrarAlerta(mensaje, tipo = 'error') {
-    const alert = document.getElementById('alert');
-    alert.textContent = mensaje;
-    alert.className = `alert ${tipo}`;
-    alert.style.display = 'block';
-}
-
-function ocultarAlerta() {
-    document.getElementById('alert').style.display = 'none';
+function validarCedula(cedula) {
+    // Validación básica de cédula ecuatoriana
+    if (!/^\d{10}$/.test(cedula)) {
+        return false;
+    }
+    
+    const digitos = cedula.split('').map(Number);
+    const provincia = parseInt(cedula.substring(0, 2));
+    
+    if (provincia < 1 || provincia > 24) {
+        return false;
+    }
+    
+    // Algoritmo de validación de cédula
+    const coeficientes = [2, 1, 2, 1, 2, 1, 2, 1, 2];
+    let suma = 0;
+    
+    for (let i = 0; i < 9; i++) {
+        let valor = digitos[i] * coeficientes[i];
+        if (valor >= 10) valor -= 9;
+        suma += valor;
+    }
+    
+    const digitoVerificador = suma % 10 === 0 ? 0 : 10 - (suma % 10);
+    
+    return digitoVerificador === digitos[9];
 }
 
 // ============================================
-// SIMULAR PRÉSTAMO (sin cambios en cálculo)
+// SIMULACIÓN
 // ============================================
 
 function simularPrestamo(e) {
     e.preventDefault();
     
-    const socioId = parseInt(document.getElementById('socioSelect').value);
     const monto = parseFloat(document.getElementById('monto').value);
     const plazo = parseInt(document.getElementById('plazo').value);
-    const observaciones = document.getElementById('observaciones').value;
     
-    if (!socioId) {
-        mostrarAlerta('Debes seleccionar un socio', 'error');
-        return;
-    }
-    
+    // Validaciones
     if (monto < 100 || monto > CONFIG.MONTO_MAXIMO) {
-        mostrarAlerta(`El monto debe estar entre $100 y $${CONFIG.MONTO_MAXIMO}`, 'error');
+        mostrarAlerta(`❌ El monto debe estar entre $100 y $${CONFIG.MONTO_MAXIMO}`, 'error');
         return;
     }
     
     if (plazo < 1 || plazo > CONFIG.PLAZO_MAXIMO) {
-        mostrarAlerta(`El plazo debe estar entre 1 y ${CONFIG.PLAZO_MAXIMO} meses`, 'error');
+        mostrarAlerta(`❌ El plazo debe estar entre 1 y ${CONFIG.PLAZO_MAXIMO} meses`, 'error');
         return;
     }
     
+    // Generar tabla
     const tabla = generarTablaAmortizacion(monto, plazo);
-    const socio = sociosData.find(s => s.id === socioId);
     
     simulacionActual = {
-        socioId,
-        socioNombre: socio.nombre_completo,
         monto,
         plazo,
-        observaciones,
         tabla,
         cuotaMensual: tabla[0].cuota,
         totalPagar: tabla[0].cuota * plazo,
@@ -145,10 +132,11 @@ function simularPrestamo(e) {
     };
     
     mostrarResultados();
+    ocultarAlerta();
 }
 
 // ============================================
-// GENERAR TABLA DE AMORTIZACIÓN (sin cambios)
+// GENERAR TABLA DE AMORTIZACIÓN
 // ============================================
 
 function generarTablaAmortizacion(monto, plazo) {
@@ -195,23 +183,26 @@ function calcularCuotaMensual(monto, tasa, plazo) {
 }
 
 // ============================================
-// MOSTRAR RESULTADOS (sin cambios)
+// MOSTRAR RESULTADOS
 // ============================================
 
 function mostrarResultados() {
     const { monto, plazo, cuotaMensual, totalPagar, totalIntereses, tabla } = simulacionActual;
     
-    document.getElementById('resumenMonto').textContent = `$${monto.toFixed(2)}`;
+    // Actualizar resumen
+    document.getElementById('resumenMonto').textContent = `$${monto.toLocaleString('es-EC', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
     document.getElementById('resumenPlazo').textContent = `${plazo} ${plazo === 1 ? 'mes' : 'meses'}`;
     document.getElementById('resumenCuota').textContent = `$${cuotaMensual.toFixed(2)}`;
     document.getElementById('resumenTotal').textContent = `$${totalPagar.toFixed(2)}`;
     document.getElementById('resumenIntereses').textContent = `$${totalIntereses.toFixed(2)}`;
     document.getElementById('resumenPrimeraCuota').textContent = formatearFecha(tabla[0].fechaPago);
     
+    // Info precancelación
     const cuotasMinimas = Math.ceil(plazo * CONFIG.PORCENTAJE_PRECANCELACION);
     document.getElementById('cuotasMinimas').textContent = cuotasMinimas;
     document.getElementById('precancelacionInfo').classList.add('show');
     
+    // Generar tabla
     const tbody = document.getElementById('tablaBody');
     tbody.innerHTML = '';
     
@@ -219,7 +210,7 @@ function mostrarResultados() {
         const tr = document.createElement('tr');
         if (index === cuotasMinimas - 1) {
             tr.classList.add('highlight');
-            tr.title = 'Después de esta cuota, podrás precancelar el préstamo';
+            tr.title = '⭐ Después de esta cuota podrás precancelar';
         }
         
         tr.innerHTML = `
@@ -239,29 +230,86 @@ function mostrarResultados() {
 }
 
 // ============================================
-// ENVIAR A APROBACIÓN - USANDO SUPABASE
+// MODAL DE SOCIO
 // ============================================
 
-async function enviarAprobacion() {
+function abrirModalSocio() {
     if (!simulacionActual) {
         mostrarAlerta('No hay simulación activa', 'error');
         return;
     }
     
+    // Limpiar campos
+    document.getElementById('nombreSocio').value = '';
+    document.getElementById('cedulaSocio').value = '';
+    
+    // Mostrar modal
+    document.getElementById('modalSocio').classList.add('show');
+}
+
+function cerrarModalSocio() {
+    document.getElementById('modalSocio').classList.remove('show');
+}
+
+// ============================================
+// ENVIAR A APROBACIÓN
+// ============================================
+
+async function enviarAprobacion() {
+    const nombreSocio = document.getElementById('nombreSocio').value.trim();
+    const cedulaSocio = document.getElementById('cedulaSocio').value.trim();
+    
+    // Validaciones
+    if (!nombreSocio) {
+        alert('❌ Debes ingresar tu nombre completo');
+        return;
+    }
+    
+    if (nombreSocio.length < 5) {
+        alert('❌ El nombre debe tener al menos 5 caracteres');
+        return;
+    }
+    
+    if (!cedulaSocio) {
+        alert('❌ Debes ingresar tu cédula');
+        return;
+    }
+    
+    if (!validarCedula(cedulaSocio)) {
+        alert('❌ La cédula ingresada no es válida');
+        return;
+    }
+    
     const confirmacion = confirm(
-        `¿Enviar solicitud de préstamo a aprobación?\n\n` +
-        `Socio: ${simulacionActual.socioNombre}\n` +
-        `Monto: $${simulacionActual.monto}\n` +
-        `Plazo: ${simulacionActual.plazo} meses\n` +
-        `Cuota: $${simulacionActual.cuotaMensual.toFixed(2)}`
+        `¿Confirmar envío de solicitud?\n\n` +
+        `👤 Nombre: ${nombreSocio}\n` +
+        `🆔 Cédula: ${cedulaSocio}\n` +
+        `💵 Monto: $${simulacionActual.monto.toLocaleString()}\n` +
+        `📅 Plazo: ${simulacionActual.plazo} meses\n` +
+        `💰 Cuota: $${simulacionActual.cuotaMensual.toFixed(2)}\n` +
+        `📈 Tasa: 10% anual`
     );
     
     if (!confirmacion) return;
     
+    cerrarModalSocio();
     mostrarCargando(true);
     
     try {
-        // 1. Crear simulación en la base de datos
+        // Buscar o crear socio
+        const socioResult = await buscarOCrearSocio(nombreSocio, cedulaSocio);
+        
+        if (!socioResult.success) {
+            throw new Error(socioResult.error);
+        }
+        
+        const socioId = socioResult.socioId;
+        
+        // Agregar datos del socio a la simulación
+        simulacionActual.socioId = socioId;
+        simulacionActual.socioNombre = nombreSocio;
+        
+        // Crear simulación
         const resultadoSimulacion = await db.crearSimulacionPrestamo(simulacionActual);
         
         if (!resultadoSimulacion.success) {
@@ -270,7 +318,7 @@ async function enviarAprobacion() {
         
         const prestamoId = resultadoSimulacion.data.id;
         
-        // 2. Enviar a aprobación (cambiar estado a Pendiente)
+        // Enviar a aprobación
         const resultadoAprobacion = await db.enviarPrestamoAprobacion(prestamoId);
         
         if (!resultadoAprobacion.success) {
@@ -279,17 +327,54 @@ async function enviarAprobacion() {
         
         alert(
             '✅ Solicitud enviada correctamente\n\n' +
-            `Número de solicitud: #${prestamoId}\n\n` +
-            'El administrador revisará tu solicitud y te notificará.'
+            `📋 Número de solicitud: #${prestamoId}\n` +
+            `👤 Solicitante: ${nombreSocio}\n` +
+            `🆔 Cédula: ${cedulaSocio}\n\n` +
+            'El administrador revisará tu solicitud.'
         );
         
         location.reload();
         
     } catch (error) {
         console.error('Error:', error);
-        mostrarAlerta('Error al enviar la solicitud: ' + error.message, 'error');
+        alert('❌ Error al enviar la solicitud:\n' + error.message);
     } finally {
         mostrarCargando(false);
+    }
+}
+
+async function buscarOCrearSocio(nombre, cedula) {
+    try {
+        // Buscar si existe el socio por cédula
+        const { data: socios, error: errorBuscar } = await db.supabase
+            .from('socios')
+            .select('id')
+            .eq('cedula', cedula)
+            .limit(1);
+        
+        if (errorBuscar) throw errorBuscar;
+        
+        if (socios && socios.length > 0) {
+            // Socio existe
+            return { success: true, socioId: socios[0].id };
+        } else {
+            // Crear nuevo socio
+            const resultado = await db.crearSocio({
+                nombre: nombre,
+                cedula: cedula,
+                telefono: null,
+                email: null
+            });
+            
+            if (resultado.success) {
+                return { success: true, socioId: resultado.data[0].id };
+            } else {
+                throw new Error(resultado.error);
+            }
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        return { success: false, error: error.message };
     }
 }
 
@@ -305,6 +390,26 @@ function formatearFecha(fecha) {
     return `${dia} ${mes} ${anio}`;
 }
 
+function mostrarAlerta(mensaje, tipo = 'error') {
+    const alert = document.getElementById('alert');
+    alert.textContent = mensaje;
+    alert.className = `alert ${tipo} show`;
+    
+    setTimeout(() => {
+        ocultarAlerta();
+    }, 5000);
+}
+
+function ocultarAlerta() {
+    const alert = document.getElementById('alert');
+    alert.classList.remove('show');
+}
+
 function mostrarCargando(mostrar) {
-    document.getElementById('loadingSpinner').style.display = mostrar ? 'block' : 'none';
+    const spinner = document.getElementById('loadingSpinner');
+    if (mostrar) {
+        spinner.classList.add('show');
+    } else {
+        spinner.classList.remove('show');
+    }
 }
