@@ -32,19 +32,6 @@
                 <!-- Monto del Préstamo con Slider -->
                 <div class="form-group">
                     <label for="monto">💵 Monto del préstamo *</label>
-                    <div class="slider-value">
-                        <span>$100</span>
-                        <strong id="montoDisplay">$2,000</strong>
-                        <span>$4,000</span>
-                    </div>
-                    <input 
-                        type="range" 
-                        id="montoSlider" 
-                        min="100" 
-                        max="4000" 
-                        step="50" 
-                        value="2000"
-                    >
                     <input 
                         type="number" 
                         id="monto" 
@@ -55,25 +42,12 @@
                         required
                         style="margin-top: 10px;"
                     >
-                    <div class="input-helper">Arrastra el slider o ingresa un valor entre $100 y $4,000</div>
                 </div>
 
                 <!-- Plazo con Slider -->
                 <div class="form-group">
                     <label for="plazo">📅 Plazo en meses *</label>
-                    <div class="slider-value">
-                        <span>1 mes</span>
-                        <strong id="plazoDisplay">12 meses</strong>
-                        <span>36 meses</span>
-                    </div>
-                    <input 
-                        type="range" 
-                        id="plazoSlider" 
-                        min="1" 
-                        max="36" 
-                        step="1" 
-                        value="12"
-                    >
+
                     <input 
                         type="number" 
                         id="plazo" 
@@ -83,7 +57,6 @@
                         required
                         style="margin-top: 10px;"
                     >
-                    <div class="input-helper">Arrastra el slider o ingresa un valor entre 1 y 36 meses</div>
                 </div>
 
                 <!-- Observaciones -->
