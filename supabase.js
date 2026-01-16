@@ -11,8 +11,8 @@ console.log('🔵 Iniciando carga de supabase.js...');
 
 // TODO: REEMPLAZA ESTOS VALORES CON LOS TUYOS DE SUPABASE
 const SUPABASE_CONFIG = {
-  url: 'https://tu-proyecto.supabase.co',
-  key: 'tu-clave-anonima-publica-aqui'
+  url: 'https://aoogaytjhsgonzctprhx.supabase.co',
+  key: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFvb2dheXRqaHNnb256Y3Rwcmh4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg1MTA1NjgsImV4cCI6MjA4NDA4NjU2OH0.NYTQJKEkjHVazLOyEVop84jh1pchoq_vwfZkyxbY6Fo'
 };
 
 console.log('📋 Configuración cargada:', {
