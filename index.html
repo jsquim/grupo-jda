@@ -4,252 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simulador de Préstamos - Grupo JDA</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .card {
-            background: white;
-            border-radius: 15px;
-            padding: 30px;
-            margin-bottom: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-        }
-
-        h1 {
-            color: #667eea;
-            margin-bottom: 10px;
-            font-size: 2rem;
-        }
-
-        .subtitle {
-            color: #666;
-            margin-bottom: 30px;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 8px;
-            color: #333;
-            font-weight: 600;
-        }
-
-        input, select {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 16px;
-            transition: border-color 0.3s;
-        }
-
-        input:focus, select:focus {
-            outline: none;
-            border-color: #667eea;
-        }
-
-        .input-helper {
-            font-size: 12px;
-            color: #999;
-            margin-top: 5px;
-        }
-
-        .alert {
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            display: none;
-        }
-
-        .alert.error {
-            background: #fee;
-            border: 1px solid #fcc;
-            color: #c00;
-        }
-
-        .alert.warning {
-            background: #fff3cd;
-            border: 1px solid #ffc107;
-            color: #856404;
-        }
-
-        .btn {
-            padding: 14px 30px;
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            margin-right: 10px;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
-        }
-
-        .btn-success {
-            background: #28a745;
-            color: white;
-        }
-
-        .btn-success:hover {
-            background: #218838;
-        }
-
-        .btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        .summary-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin: 20px 0;
-        }
-
-        .summary-item {
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 8px;
-            border-left: 4px solid #667eea;
-        }
-
-        .summary-label {
-            font-size: 12px;
-            color: #666;
-            text-transform: uppercase;
-            margin-bottom: 5px;
-        }
-
-        .summary-value {
-            font-size: 24px;
-            font-weight: 700;
-            color: #333;
-        }
-
-        .table-container {
-            overflow-x: auto;
-            margin-top: 20px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 14px;
-        }
-
-        th {
-            background: #667eea;
-            color: white;
-            padding: 12px;
-            text-align: left;
-            font-weight: 600;
-        }
-
-        td {
-            padding: 10px 12px;
-            border-bottom: 1px solid #e0e0e0;
-        }
-
-        tr:hover {
-            background: #f8f9fa;
-        }
-
-        .highlight {
-            background: #fff3cd !important;
-            font-weight: 600;
-        }
-
-        .precancelacion-info {
-            background: #d4edda;
-            border: 1px solid #c3e6cb;
-            border-radius: 8px;
-            padding: 15px;
-            margin: 20px 0;
-            display: none;
-        }
-
-        .precancelacion-info.show {
-            display: block;
-        }
-
-        @media (max-width: 768px) {
-            h1 {
-                font-size: 1.5rem;
-            }
-
-            .card {
-                padding: 20px;
-            }
-
-            .summary-grid {
-                grid-template-columns: 1fr;
-            }
-
-            table {
-                font-size: 12px;
-            }
-
-            th, td {
-                padding: 8px;
-            }
-        }
-
-        #loadingSpinner {
-            display: none;
-            text-align: center;
-            padding: 20px;
-        }
-
-        .spinner {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #667eea;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-    </style>
+    
+    <!-- Estilos CSS externos -->
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="container">
         <!-- Header -->
         <div class="card">
             <h1>🧮 Simulador de Préstamos</h1>
-            <p class="subtitle">Grupo de Ahorros JDA • Tasa: 11% anual • Máximo: $4,000 • Plazo: hasta 36 meses</p>
+            <p class="subtitle">Grupo de Ahorros JDA • Tasa: 10% anual • Máximo: $4,000 • Plazo: hasta 36 meses</p>
         </div>
 
         <!-- Formulario de Simulación -->
@@ -257,28 +21,79 @@
             <div id="alert" class="alert"></div>
 
             <form id="simuladorForm">
+                <!-- Selección de Socio -->
                 <div class="form-group">
-                    <label for="socioSelect">Socio solicitante *</label>
+                    <label for="socioSelect">👤 Socio solicitante *</label>
                     <select id="socioSelect" required>
                         <option value="">Seleccionar socio...</option>
                     </select>
                 </div>
 
+                <!-- Monto del Préstamo con Slider -->
                 <div class="form-group">
-                    <label for="monto">Monto del préstamo *</label>
-                    <input type="number" id="monto" min="100" max="4000" step="50" required>
-                    <div class="input-helper">Mínimo: $100 • Máximo: $4,000</div>
+                    <label for="monto">💵 Monto del préstamo *</label>
+                    <div class="slider-value">
+                        <span>$100</span>
+                        <strong id="montoDisplay">$2,000</strong>
+                        <span>$4,000</span>
+                    </div>
+                    <input 
+                        type="range" 
+                        id="montoSlider" 
+                        min="100" 
+                        max="4000" 
+                        step="50" 
+                        value="2000"
+                    >
+                    <input 
+                        type="number" 
+                        id="monto" 
+                        min="100" 
+                        max="4000" 
+                        step="50" 
+                        value="2000"
+                        required
+                        style="margin-top: 10px;"
+                    >
+                    <div class="input-helper">Arrastra el slider o ingresa un valor entre $100 y $4,000</div>
                 </div>
 
+                <!-- Plazo con Slider -->
                 <div class="form-group">
-                    <label for="plazo">Plazo en meses *</label>
-                    <input type="number" id="plazo" min="1" max="36" required>
-                    <div class="input-helper">Mínimo: 1 mes • Máximo: 36 meses</div>
+                    <label for="plazo">📅 Plazo en meses *</label>
+                    <div class="slider-value">
+                        <span>1 mes</span>
+                        <strong id="plazoDisplay">12 meses</strong>
+                        <span>36 meses</span>
+                    </div>
+                    <input 
+                        type="range" 
+                        id="plazoSlider" 
+                        min="1" 
+                        max="36" 
+                        step="1" 
+                        value="12"
+                    >
+                    <input 
+                        type="number" 
+                        id="plazo" 
+                        min="1" 
+                        max="36" 
+                        value="12"
+                        required
+                        style="margin-top: 10px;"
+                    >
+                    <div class="input-helper">Arrastra el slider o ingresa un valor entre 1 y 36 meses</div>
                 </div>
 
+                <!-- Observaciones -->
                 <div class="form-group">
-                    <label for="observaciones">Observaciones (opcional)</label>
-                    <input type="text" id="observaciones" placeholder="Motivo del préstamo, detalles adicionales...">
+                    <label for="observaciones">📝 Observaciones (opcional)</label>
+                    <textarea 
+                        id="observaciones" 
+                        placeholder="Motivo del préstamo, detalles adicionales..."
+                        rows="3"
+                    ></textarea>
                 </div>
 
                 <button type="submit" class="btn btn-primary">📊 Simular Préstamo</button>
@@ -291,45 +106,61 @@
                 <h2>📋 Resumen del Préstamo</h2>
                 
                 <div class="summary-grid">
+                    <!-- Nombre del Socio -->
+                    <div class="summary-item summary-socio">
+                        <div class="summary-label">👤 Solicitante</div>
+                        <div class="summary-value" id="resumenNombreSocio">-</div>
+                    </div>
+                    
                     <div class="summary-item">
-                        <div class="summary-label">Monto solicitado</div>
+                        <div class="summary-label">💵 Monto solicitado</div>
                         <div class="summary-value" id="resumenMonto">$0.00</div>
                     </div>
+                    
                     <div class="summary-item">
-                        <div class="summary-label">Plazo</div>
+                        <div class="summary-label">📅 Plazo</div>
                         <div class="summary-value" id="resumenPlazo">0 meses</div>
                     </div>
+                    
                     <div class="summary-item">
-                        <div class="summary-label">Cuota mensual</div>
+                        <div class="summary-label">💰 Cuota mensual</div>
                         <div class="summary-value" id="resumenCuota">$0.00</div>
                     </div>
+                    
                     <div class="summary-item">
-                        <div class="summary-label">Total a pagar</div>
+                        <div class="summary-label">💸 Total a pagar</div>
                         <div class="summary-value" id="resumenTotal">$0.00</div>
                     </div>
+                    
                     <div class="summary-item">
-                        <div class="summary-label">Total intereses</div>
+                        <div class="summary-label">📈 Total intereses</div>
                         <div class="summary-value" id="resumenIntereses">$0.00</div>
                     </div>
+                    
                     <div class="summary-item">
-                        <div class="summary-label">Primera cuota</div>
-                        <div class="summary-value" id="resumenPrimeraCuota">--</div>
+                        <div class="summary-label">📆 Primera cuota</div>
+                        <div class="summary-value" id="resumenPrimeraCuota" style="font-size: 1.3rem;">--</div>
+                    </div>
+                    
+                    <div class="summary-item">
+                        <div class="summary-label">📊 Tasa de interés</div>
+                        <div class="summary-value">10%</div>
                     </div>
                 </div>
 
                 <div class="precancelacion-info" id="precancelacionInfo">
                     <strong>✅ Información de Precancelación:</strong><br>
                     Podrás precancelar este préstamo después de pagar <strong id="cuotasMinimas">0</strong> cuotas 
-                    (25% del total). Esto te permitirá liquidar el saldo restante con descuento en intereses futuros.
+                    (25% del total). Esto te permitirá liquidar el saldo restante sin pagar los intereses futuros.
                 </div>
 
                 <div class="table-container">
-                    <h3>Tabla de Amortización Francesa</h3>
+                    <h3>📊 Tabla de Amortización Francesa</h3>
                     <table id="tablaAmortizacion">
                         <thead>
                             <tr>
                                 <th>#</th>
-                                <th>Fecha de Pago</th>
+                                <th>Fecha</th>
                                 <th>Saldo Inicial</th>
                                 <th>Cuota</th>
                                 <th>Interés</th>
@@ -344,23 +175,21 @@
 
                 <div style="margin-top: 30px;">
                     <button type="button" class="btn btn-success" id="btnEnviar">✅ Enviar a Aprobación</button>
-                    <button type="button" class="btn btn-primary" onclick="location.reload()">🔄 Nueva Simulación</button>
+                    <button type="button" class="btn btn-secondary" onclick="location.reload()">🔄 Nueva Simulación</button>
                 </div>
             </div>
         </div>
 
+        <!-- Loading Spinner -->
         <div id="loadingSpinner">
             <div class="spinner"></div>
-            <p>Procesando...</p>
+            <p>Procesando solicitud...</p>
         </div>
     </div>
 
+    <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    
-    <!-- 2️⃣ SEGUNDO: Tu configuración -->
     <script src="supabase.js"></script>
-    
-    <!-- 3️⃣ TERCERO: Tu app -->
     <script src="simulador.js"></script>
 </body>
 </html>
