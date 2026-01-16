@@ -1,363 +1,328 @@
-// ============================================
-// SUPABASE.JS - VERSIÓN CORREGIDA
-// Sistema Grupo JDA
-// ============================================
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Conexión - Grupo JDA</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        h1 { color: #667eea; margin-bottom: 20px; }
+        .status {
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+        .success { background: #d4edda; color: #155724; border: 2px solid #c3e6cb; }
+        .error { background: #f8d7da; color: #721c24; border: 2px solid #f5c6cb; }
+        .info { background: #d1ecf1; color: #0c5460; border: 2px solid #bee5eb; }
+        .warning { background: #fff3cd; color: #856404; border: 2px solid #ffc107; }
+        
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 5px;
+            transition: all 0.3s;
+        }
+        button:hover { background: #5568d3; transform: translateY(-2px); }
+        
+        .log {
+            background: #f8f9fa;
+            padding: 10px;
+            margin: 5px 0;
+            border-left: 3px solid #17a2b8;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+        }
+        .log.error { border-left-color: #dc3545; color: #721c24; }
+        .log.success { border-left-color: #28a745; color: #155724; }
+        
+        .step {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+        .step h3 { margin: 0 0 10px 0; color: #856404; }
+        
+        pre {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-size: 13px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        th {
+            background: #667eea;
+            color: white;
+            padding: 12px;
+            text-align: left;
+        }
+        td {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        tr:hover { background: #f8f9fa; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <h1>🔧 Test de Conexión Supabase</h1>
+            
+            <div id="status" class="status info">
+                ⏳ Esperando inicialización...
+            </div>
 
-console.log('🔵 Iniciando carga de supabase.js...');
+            <div>
+                <button onclick="ejecutarPrueba()">🧪 Probar Conexión</button>
+                <button onclick="cargarSocios()">👥 Cargar Socios</button>
+                <button onclick="verConfig()">⚙️ Ver Config</button>
+                <button onclick="abrirConsola()">📟 Abrir Consola</button>
+                <button onclick="location.reload()">🔄 Recargar</button>
+            </div>
 
-// ============================================
-// CONFIGURACIÓN
-// ============================================
+            <div id="logs"></div>
+        </div>
 
-// TODO: REEMPLAZA ESTOS VALORES CON LOS TUYOS DE SUPABASE
-const SUPABASE_CONFIG = {
-  url: 'https://tu-proyecto.supabase.co',
-  key: 'tu-clave-anonima-publica-aqui'
-};
+        <div class="card">
+            <h3>📋 Checklist de Configuración</h3>
+            <div class="step">
+                <ol style="margin-left: 20px; line-height: 1.8;">
+                    <li>✅ Crear proyecto en <a href="https://supabase.com" target="_blank">Supabase.com</a></li>
+                    <li>✅ Ir a SQL Editor y ejecutar el script de creación de tablas</li>
+                    <li>✅ Ir a Settings > API y copiar:
+                        <ul style="margin-top: 5px;">
+                            <li><strong>Project URL</strong></li>
+                            <li><strong>anon public key</strong> (NO la service_role)</li>
+                        </ul>
+                    </li>
+                    <li>✅ Editar <code>supabase.js</code> y pegar las credenciales</li>
+                    <li>✅ Verificar que el CDN esté incluido en el HTML</li>
+                </ol>
+            </div>
 
-console.log('📋 Configuración cargada:', {
-  url: SUPABASE_CONFIG.url,
-  keyLength: SUPABASE_CONFIG.key.length
-});
+            <h3>🔗 Orden de los Scripts en HTML</h3>
+            <pre>&lt;!-- 1. CDN de Supabase PRIMERO --&gt;
+&lt;script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"&gt;&lt;/script&gt;
 
-// ============================================
-// VERIFICAR SDK DE SUPABASE
-// ============================================
+&lt;!-- 2. Tu configuración DESPUÉS --&gt;
+&lt;script src="supabase.js"&gt;&lt;/script&gt;
 
-function verificarSDK() {
-  if (typeof window.supabase === 'undefined') {
-    console.error('❌ ERROR: El SDK de Supabase no está disponible');
-    console.error('Asegúrate de incluir el CDN ANTES de supabase.js:');
-    console.error('<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>');
-    return false;
-  }
-  console.log('✅ SDK de Supabase detectado');
-  return true;
-}
+&lt;!-- 3. Tu app AL FINAL --&gt;
+&lt;script src="simulador.js"&gt;&lt;/script&gt;</pre>
+        </div>
+    </div>
 
-// ============================================
-// CLASE DE SERVICIO DE BASE DE DATOS
-// ============================================
-
-class DatabaseService {
-  
-  constructor() {
-    console.log('🔧 Inicializando DatabaseService...');
+    <!-- ⚠️ IMPORTANTE: El orden de estos scripts es CRÍTICO -->
     
-    if (!verificarSDK()) {
-      throw new Error('SDK de Supabase no disponible');
-    }
+    <!-- 1. SDK de Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     
-    // Verificar configuración
-    if (SUPABASE_CONFIG.url.includes('tu-proyecto')) {
-      console.warn('⚠️ ADVERTENCIA: Debes configurar tu URL de Supabase');
-    }
-    if (SUPABASE_CONFIG.key.includes('tu-clave')) {
-      console.warn('⚠️ ADVERTENCIA: Debes configurar tu clave de Supabase');
-    }
-    
-    try {
-      // Crear cliente de Supabase
-      this.supabase = window.supabase.createClient(
-        SUPABASE_CONFIG.url, 
-        SUPABASE_CONFIG.key
-      );
-      
-      console.log('✅ Cliente de Supabase creado exitosamente');
-      this.inicializado = true;
-    } catch (error) {
-      console.error('❌ Error al crear cliente de Supabase:', error);
-      this.inicializado = false;
-      throw error;
-    }
-  }
-  
-  // Verificar inicialización
-  _verificar() {
-    if (!this.inicializado || !this.supabase) {
-      throw new Error('DatabaseService no está inicializado correctamente');
-    }
-  }
-  
-  // ==========================================
-  // PRUEBA DE CONEXIÓN
-  // ==========================================
-  
-  async probarConexion() {
-    try {
-      this._verificar();
-      
-      console.log('🔍 Probando conexión con Supabase...');
-      
-      const { data, error, count } = await this.supabase
-        .from('socios')
-        .select('*', { count: 'exact', head: true });
-      
-      if (error) {
-        console.error('❌ Error en la consulta:', error);
-        throw error;
-      }
-      
-      console.log('✅ Conexión exitosa!');
-      console.log(`📊 Total de socios: ${count}`);
-      
-      return { success: true, count };
-    } catch (error) {
-      console.error('❌ Error de conexión:', error);
-      
-      let mensaje = 'Error desconocido';
-      
-      if (error.message.includes('Failed to fetch') || error.message.includes('NetworkError')) {
-        mensaje = 'No se puede conectar al servidor. Verifica:\n1. Tu URL de Supabase\n2. Tu conexión a internet\n3. Que el proyecto esté activo';
-      } else if (error.message.includes('JWT') || error.message.includes('Invalid API key')) {
-        mensaje = 'Clave de API inválida. Verifica tu ANON KEY en Settings > API';
-      } else if (error.message.includes('relation') || error.message.includes('does not exist')) {
-        mensaje = 'La tabla "socios" no existe. Ejecuta el script SQL en Supabase > SQL Editor';
-      } else {
-        mensaje = error.message;
-      }
-      
-      return { success: false, error: mensaje };
-    }
-  }
-  
-  // ==========================================
-  // SOCIOS
-  // ==========================================
-  
-  async obtenerSocios() {
-    try {
-      this._verificar();
-      
-      console.log('📥 Obteniendo lista de socios...');
-      
-      const { data, error } = await this.supabase
-        .from('socios')
-        .select('*')
-        .eq('activo', true)
-        .order('nombre_completo', { ascending: true });
-      
-      if (error) {
-        console.error('❌ Error al obtener socios:', error);
-        throw error;
-      }
-      
-      console.log(`✅ ${data.length} socios obtenidos`);
-      return { success: true, data };
-      
-    } catch (error) {
-      console.error('❌ Error:', error);
-      return { success: false, error: error.message };
-    }
-  }
-  
-  async obtenerSocioPorId(id) {
-    try {
-      this._verificar();
-      
-      const { data, error } = await this.supabase
-        .from('socios')
-        .select('*')
-        .eq('id', id)
-        .single();
-      
-      if (error) throw error;
-      return { success: true, data };
-      
-    } catch (error) {
-      console.error('❌ Error:', error);
-      return { success: false, error: error.message };
-    }
-  }
-  
-  // ==========================================
-  // PRÉSTAMOS
-  // ==========================================
-  
-  async crearSimulacionPrestamo(prestamoData) {
-    try {
-      this._verificar();
-      
-      console.log('💾 Creando simulación de préstamo...');
-      
-      const { data, error } = await this.supabase
-        .from('prestamos')
-        .insert([{
-          socio_id: parseInt(prestamoData.socioId),
-          monto: parseFloat(prestamoData.monto),
-          plazo_meses: parseInt(prestamoData.plazo),
-          tasa_anual: 0.11,
-          tasa_mensual: 0.11 / 12,
-          cuota_mensual: parseFloat(prestamoData.cuotaMensual),
-          total_intereses: parseFloat(prestamoData.totalIntereses),
-          total_pagar: parseFloat(prestamoData.totalPagar),
-          fecha_primera_cuota: prestamoData.tabla[0].fechaPago.toISOString().split('T')[0],
-          estado: 'Simulado',
-          observaciones: prestamoData.observaciones || null,
-          cuotas_minimas_precancelar: Math.ceil(prestamoData.plazo * 0.25)
-        }])
-        .select()
-        .single();
-      
-      if (error) {
-        console.error('❌ Error al crear préstamo:', error);
-        throw error;
-      }
-      
-      console.log('✅ Préstamo creado con ID:', data.id);
-      
-      // Guardar tabla de amortización
-      await this.guardarTablaAmortizacion(data.id, prestamoData.tabla);
-      
-      return { success: true, data };
-      
-    } catch (error) {
-      console.error('❌ Error:', error);
-      return { success: false, error: error.message };
-    }
-  }
-  
-  async guardarTablaAmortizacion(prestamoId, tabla) {
-    try {
-      this._verificar();
-      
-      console.log('💾 Guardando tabla de amortización...');
-      
-      const filas = tabla.map(fila => ({
-        prestamo_id: prestamoId,
-        numero_cuota: fila.numero,
-        fecha_pago: fila.fechaPago.toISOString().split('T')[0],
-        saldo_inicial: parseFloat(fila.saldoInicial),
-        cuota: parseFloat(fila.cuota),
-        interes: parseFloat(fila.interes),
-        capital: parseFloat(fila.capital),
-        saldo_final: parseFloat(fila.saldoFinal),
-        pagada: false
-      }));
-      
-      const { data, error } = await this.supabase
-        .from('amortizacion')
-        .insert(filas)
-        .select();
-      
-      if (error) {
-        console.error('❌ Error al guardar amortización:', error);
-        throw error;
-      }
-      
-      console.log(`✅ ${data.length} cuotas guardadas`);
-      return { success: true, data };
-      
-    } catch (error) {
-      console.error('❌ Error:', error);
-      return { success: false, error: error.message };
-    }
-  }
-  
-  async enviarPrestamoAprobacion(prestamoId) {
-    try {
-      this._verificar();
-      
-      console.log('📤 Enviando préstamo a aprobación...');
-      
-      const { data, error } = await this.supabase
-        .from('prestamos')
-        .update({ 
-          estado: 'Pendiente',
-          fecha_solicitud: new Date().toISOString()
-        })
-        .eq('id', prestamoId)
-        .select();
-      
-      if (error) throw error;
-      
-      console.log('✅ Préstamo enviado');
-      return { success: true, data };
-      
-    } catch (error) {
-      console.error('❌ Error:', error);
-      return { success: false, error: error.message };
-    }
-  }
-  
-  async obtenerPrestamosPendientes() {
-    try {
-      this._verificar();
-      
-      const { data, error } = await this.supabase
-        .from('prestamos')
-        .select(`
-          *,
-          socios (
-            id,
-            nombre_completo,
-            cedula
-          )
-        `)
-        .eq('estado', 'Pendiente')
-        .order('fecha_solicitud', { ascending: true });
-      
-      if (error) throw error;
-      return { success: true, data };
-      
-    } catch (error) {
-      console.error('❌ Error:', error);
-      return { success: false, error: error.message };
-    }
-  }
-}
+    <!-- 2. Configuración de Supabase -->
+    <script src="supabase.js"></script>
 
-// ============================================
-// INICIALIZACIÓN GLOBAL
-// ============================================
+    <!-- 3. Lógica de pruebas -->
+    <script>
+        const logsDiv = document.getElementById('logs');
+        const statusDiv = document.getElementById('status');
 
-let db = null;
+        // Esperar un momento para que se inicialice todo
+        setTimeout(verificarInicializacion, 1000);
 
-function inicializarDB() {
-  try {
-    console.log('🚀 Intentando inicializar DatabaseService...');
-    
-    if (!verificarSDK()) {
-      throw new Error('SDK de Supabase no disponible');
-    }
-    
-    db = new DatabaseService();
-    window.db = db; // Hacer disponible globalmente
-    
-    console.log('✅ DatabaseService inicializado correctamente');
-    console.log('💡 Puedes usar "db" en la consola para probar');
-    
-    return true;
-  } catch (error) {
-    console.error('❌ Error al inicializar DatabaseService:', error);
-    return false;
-  }
-}
+        function verificarInicializacion() {
+            log('🔍 Verificando inicialización...');
+            
+            if (typeof window.supabase === 'undefined') {
+                error('❌ SDK de Supabase NO cargado');
+                statusDiv.className = 'status error';
+                statusDiv.innerHTML = '❌ SDK de Supabase no disponible<br><small>Verifica tu conexión a internet</small>';
+                return;
+            }
+            success('✅ SDK de Supabase cargado');
+            
+            if (typeof window.db === 'undefined' || window.db === null) {
+                error('❌ DatabaseService NO inicializado');
+                statusDiv.className = 'status error';
+                statusDiv.innerHTML = '❌ Error de inicialización<br><small>Revisa la consola del navegador (F12)</small>';
+                return;
+            }
+            success('✅ DatabaseService inicializado');
+            
+            if (typeof SUPABASE_CONFIG !== 'undefined') {
+                if (SUPABASE_CONFIG.url.includes('tu-proyecto')) {
+                    warning('⚠️ Debes configurar tu URL de Supabase');
+                    statusDiv.className = 'status warning';
+                    statusDiv.innerHTML = '⚠️ Configuración pendiente<br><small>Edita supabase.js con tus credenciales</small>';
+                    return;
+                }
+            }
+            
+            statusDiv.className = 'status success';
+            statusDiv.innerHTML = '✅ Sistema inicializado correctamente<br><small>Haz clic en "Probar Conexión" para verificar</small>';
+        }
 
-// Intentar inicializar inmediatamente
-if (document.readyState === 'loading') {
-  console.log('⏳ Esperando a que el DOM esté listo...');
-  document.addEventListener('DOMContentLoaded', () => {
-    console.log('✅ DOM listo');
-    inicializarDB();
-  });
-} else {
-  console.log('✅ DOM ya está listo');
-  inicializarDB();
-}
+        async function ejecutarPrueba() {
+            logsDiv.innerHTML = '';
+            log('🧪 Iniciando prueba de conexión...');
+            
+            try {
+                if (!window.db) {
+                    throw new Error('db no está disponible');
+                }
+                
+                const resultado = await db.probarConexion();
+                
+                if (resultado.success) {
+                    success(`✅ ¡CONEXIÓN EXITOSA! (${resultado.count} socios encontrados)`);
+                    statusDiv.className = 'status success';
+                    statusDiv.textContent = '✅ Conexión verificada correctamente';
+                } else {
+                    error('❌ ' + resultado.error);
+                    statusDiv.className = 'status error';
+                    statusDiv.innerHTML = `❌ Error de conexión<br><small>${resultado.error}</small>`;
+                }
+            } catch (err) {
+                error('❌ Error: ' + err.message);
+                statusDiv.className = 'status error';
+                statusDiv.textContent = '❌ ' + err.message;
+            }
+        }
 
-// ============================================
-// FUNCIÓN DE PRUEBA GLOBAL
-// ============================================
+        async function cargarSocios() {
+            logsDiv.innerHTML = '';
+            log('📥 Cargando socios...');
+            
+            try {
+                if (!window.db) {
+                    throw new Error('db no está disponible');
+                }
+                
+                const resultado = await db.obtenerSocios();
+                
+                if (resultado.success) {
+                    success(`✅ ${resultado.data.length} socios cargados`);
+                    
+                    if (resultado.data.length > 0) {
+                        const tabla = document.createElement('table');
+                        tabla.innerHTML = `
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nombre</th>
+                                    <th>Cédula</th>
+                                    <th>Email</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${resultado.data.map(s => `
+                                    <tr>
+                                        <td>${s.id}</td>
+                                        <td>${s.nombre_completo}</td>
+                                        <td>${s.cedula}</td>
+                                        <td>${s.email || '-'}</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        `;
+                        logsDiv.appendChild(tabla);
+                    } else {
+                        warning('⚠️ No hay socios registrados aún');
+                    }
+                } else {
+                    error('❌ ' + resultado.error);
+                }
+            } catch (err) {
+                error('❌ ' + err.message);
+            }
+        }
 
-async function probarConexion() {
-  if (!db) {
-    console.error('❌ db no está inicializado');
-    return { success: false, error: 'DatabaseService no inicializado' };
-  }
-  return await db.probarConexion();
-}
+        function verConfig() {
+            logsDiv.innerHTML = '';
+            log('⚙️ Configuración actual:');
+            
+            if (typeof SUPABASE_CONFIG !== 'undefined') {
+                const pre = document.createElement('pre');
+                pre.textContent = `URL: ${SUPABASE_CONFIG.url}\nKEY: ${SUPABASE_CONFIG.key.substring(0, 30)}...`;
+                logsDiv.appendChild(pre);
+                
+                if (SUPABASE_CONFIG.url.includes('tu-proyecto')) {
+                    error('❌ Las credenciales NO están configuradas');
+                } else {
+                    success('✅ Las credenciales están configuradas');
+                }
+            } else {
+                error('❌ SUPABASE_CONFIG no definido');
+            }
+        }
 
-window.probarConexion = probarConexion;
+        function abrirConsola() {
+            alert('Presiona F12 para abrir la consola del navegador y ver los logs detallados');
+        }
 
-console.log('✅ supabase.js cargado completamente');
+        function log(msg) {
+            const div = document.createElement('div');
+            div.className = 'log';
+            div.textContent = msg;
+            logsDiv.appendChild(div);
+            console.log(msg);
+        }
+
+        function success(msg) {
+            const div = document.createElement('div');
+            div.className = 'log success';
+            div.textContent = msg;
+            logsDiv.appendChild(div);
+            console.log(msg);
+        }
+
+        function error(msg) {
+            const div = document.createElement('div');
+            div.className = 'log error';
+            div.textContent = msg;
+            logsDiv.appendChild(div);
+            console.error(msg);
+        }
+
+        function warning(msg) {
+            const div = document.createElement('div');
+            div.className = 'log';
+            div.style.borderLeftColor = '#ffc107';
+            div.textContent = msg;
+            logsDiv.appendChild(div);
+            console.warn(msg);
+        }
+    </script>
+</body>
+</html>
