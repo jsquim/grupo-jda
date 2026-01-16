@@ -4,8 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simulador de Préstamos - Grupo JDA</title>
-    
-    <!-- Estilos CSS externos -->
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -21,15 +19,7 @@
             <div id="alert" class="alert"></div>
 
             <form id="simuladorForm">
-                <!-- Selección de Socio -->
-                <div class="form-group">
-                    <label for="socioSelect">👤 Socio solicitante *</label>
-                    <select id="socioSelect" required>
-                        <option value="">Seleccionar socio...</option>
-                    </select>
-                </div>
-
-                <!-- Monto del Préstamo con Slider -->
+                <!-- Monto del Préstamo -->
                 <div class="form-group">
                     <label for="monto">💵 Monto del préstamo *</label>
                     <input 
@@ -38,16 +28,16 @@
                         min="100" 
                         max="4000" 
                         step="50" 
-                        value="2000"
+                        value="1000"
                         required
-                        style="margin-top: 10px;"
+                        placeholder="Ej: 1500"
                     >
+                    <div class="input-helper">Entre $100 y $4,000</div>
                 </div>
 
-                <!-- Plazo con Slider -->
+                <!-- Plazo -->
                 <div class="form-group">
                     <label for="plazo">📅 Plazo en meses *</label>
-
                     <input 
                         type="number" 
                         id="plazo" 
@@ -55,18 +45,9 @@
                         max="36" 
                         value="12"
                         required
-                        style="margin-top: 10px;"
+                        placeholder="Ej: 12"
                     >
-                </div>
-
-                <!-- Observaciones -->
-                <div class="form-group">
-                    <label for="observaciones">📝 Observaciones (opcional)</label>
-                    <textarea 
-                        id="observaciones" 
-                        placeholder="Motivo del préstamo, detalles adicionales..."
-                        rows="3"
-                    ></textarea>
+                    <div class="input-helper">Entre 1 y 36 meses</div>
                 </div>
 
                 <button type="submit" class="btn btn-primary">📊 Simular Préstamo</button>
@@ -79,12 +60,6 @@
                 <h2>📋 Resumen del Préstamo</h2>
                 
                 <div class="summary-grid">
-                    <!-- Nombre del Socio -->
-                    <div class="summary-item summary-socio">
-                        <div class="summary-label">👤 Solicitante</div>
-                        <div class="summary-value" id="resumenNombreSocio">-</div>
-                    </div>
-                    
                     <div class="summary-item">
                         <div class="summary-label">💵 Monto solicitado</div>
                         <div class="summary-value" id="resumenMonto">$0.00</div>
@@ -150,6 +125,39 @@
                     <button type="button" class="btn btn-success" id="btnEnviar">✅ Enviar a Aprobación</button>
                     <button type="button" class="btn btn-secondary" onclick="location.reload()">🔄 Nueva Simulación</button>
                 </div>
+            </div>
+        </div>
+
+        <!-- Modal para Solicitar Nombre del Socio -->
+        <div id="modalSocio" class="modal">
+            <div class="modal-content">
+                <h3>👤 Identificación del Socio</h3>
+                <p>Para enviar la solicitud a aprobación, ingresa tu nombre completo:</p>
+                
+                <div class="form-group">
+                    <label for="nombreSocio">Nombre completo *</label>
+                    <input 
+                        type="text" 
+                        id="nombreSocio" 
+                        placeholder="Ej: Juan Pérez García"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="cedulaSocio">Cédula *</label>
+                    <input 
+                        type="text" 
+                        id="cedulaSocio" 
+                        placeholder="Ej: 0912345678"
+                        maxlength="10"
+                        required
+                    >
+                    <div class="input-helper">10 dígitos</div>
+                </div>
+                
+                <button type="button" class="btn btn-success" id="btnConfirmarSocio">✅ Confirmar y Enviar</button>
+                <button type="button" class="btn btn-secondary" id="btnCancelarModal">❌ Cancelar</button>
             </div>
         </div>
 
