@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Admin - Grupo JDA</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h1>⚙️ Panel de Administración</h1>
+                <button class="btn btn-danger" onclick="cerrarSesion()">🚪 Salir</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>📋 Préstamos Pendientes de Aprobación</h2>
+            <div id="listaPrestamos">Cargando...</div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="config.js"></script>
+    <script src="database.js"></script>
+    <script>
+        async function cargarPrestamos() {
+            const res = await obtenerPrestamosPendientes();
+            
+            const div = document.getElementById('listaPrestamos');
+            
+            if (!res.success) {
+                div.innerHTML = '<p>Error al cargar préstamos</p>';
+                return;
+            }
+            
+            if (res.data.length === 0) {
+                div.innerHTML = '<p>No hay préstamos pendientes</p>';
+                return;
+            }
+            
+            div.innerHTML = '';
+            
+            res.data.forEach(p => {
+                const item = document.createElement('div');
+                item.className = 'prestamo-item';
+                item.innerHTML = `
+                    <div style="border: 2px solid #e0e0e0; padding: 20px; border-radius: 10px; margin-bottom: 15px;">
+                        <h3>Solicitud #${p.id}</h3>
+                        <p><strong>Solicitante:</strong> ${p.socios.nombre_completo}</p>
+                        <p><strong>Cédula:</strong> ${p.socios.cedula}</p>
+                        <p><strong>Monto:</strong> $${p.monto}</p>
+                        <p><strong>Plazo:</strong> ${p.plazo_meses} meses</p>
+                        <p><strong>Cuota:</strong> $${p.cuota_mensual.toFixed(2)}</p>
+                        <p><strong>Fecha:</strong> ${new Date(p.fecha_solicitud).toLocaleDateString()}</p>
+                        <div style="margin-top: 15px;">
+                            <button class="btn btn-success" onclick="aprobar(${p.id})">✅ Aprobar</button>
+                            <button class="btn btn-danger" onclick="rechazar(${p.id})">❌ Rechazar</button>
+                        </div>
+                    </div>
+                `;
+                div.appendChild(item);
+            });
+        }
+
+        async function aprobar(id) {
+            if (!confirm('¿Aprobar este préstamo?')) return;
+            
+            const res = await aprobarPrestamo(id);
+            if (res.success) {
+                alert('✅ Préstamo aprobado');
+                cargarPrestamos();
+            } else {
+                alert('❌ Error al aprobar');
+            }
+        }
+
+        async function rechazar(id) {
+            const motivo = prompt('Motivo del rechazo:');
+            if (!motivo) return;
+            
+            const res = await rechazarPrestamo(id, motivo);
+            if (res.success) {
+                alert('✅ Préstamo rechazado');
+                cargarPrestamos();
+            } else {
+                alert('❌ Error al rechazar');
+            }
+        }
+
+        async function cerrarSesion() {
+            await logout();
+            window.location.href = 'login.html';
+        }
+
+        // Cargar al iniciar
+        cargarPrestamos();
+    </script>
+</body>
+</html>
