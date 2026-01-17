@@ -185,25 +185,56 @@ const Simulador = {
     const { monto, plazo, cuotaMensual, totalPagar, totalIntereses, tabla } = this.simulacionActual;
     
     // Actualizar resumen
-    document.getElementById('resumenMonto').textContent = `$${Utils.formatearNumero(monto)}`;
-    document.getElementById('resumenPlazo').textContent = `${plazo} ${plazo === 1 ? 'mes' : 'meses'}`;
-    document.getElementById('resumenCuota').textContent = Utils.formatearMoneda(cuotaMensual);
-    document.getElementById('resumenTotal').textContent = Utils.formatearMoneda(totalPagar);
-    document.getElementById('resumenIntereses').textContent = Utils.formatearMoneda(totalIntereses);
-    document.getElementById('resumenPrimeraCuota').textContent = Utils.formatearFecha(tabla[0].fechaPago);
+    const elementoMonto = document.getElementById('resumenMonto');
+    const elementoPlazo = document.getElementById('resumenPlazo');
+    const elementoCuota = document.getElementById('resumenCuota');
+    const elementoTotal = document.getElementById('resumenTotal');
+    const elementoIntereses = document.getElementById('resumenIntereses');
+    const elementoPrimeraCuota = document.getElementById('resumenPrimeraCuota');
+    
+    if (!elementoMonto || !elementoPlazo || !elementoCuota || !elementoTotal || !elementoIntereses || !elementoPrimeraCuota) {
+      console.error('❌ No se encontraron elementos del DOM para mostrar resultados');
+      Utils.mostrarAlerta('Error al mostrar resultados. Recarga la página.', 'error');
+      return;
+    }
+    
+    elementoMonto.textContent = `${Utils.formatearNumero(monto)}`;
+    elementoPlazo.textContent = `${plazo} ${plazo === 1 ? 'mes' : 'meses'}`;
+    elementoCuota.textContent = Utils.formatearMoneda(cuotaMensual);
+    elementoTotal.textContent = Utils.formatearMoneda(totalPagar);
+    elementoIntereses.textContent = Utils.formatearMoneda(totalIntereses);
+    elementoPrimeraCuota.textContent = Utils.formatearFecha(tabla[0].fechaPago);
     
     // Info de precancelación
     const cuotasMinimas = Math.ceil(plazo * APP_CONFIG.prestamos.porcentajePrecancelacion);
-    document.getElementById('cuotasMinimas').textContent = cuotasMinimas;
-    document.getElementById('precancelacionInfo').classList.add('show');
+    const elementoCuotasMinimas = document.getElementById('cuotasMinimas');
+    const elementoPrecancelacion = document.getElementById('precancelacionInfo');
+    
+    if (elementoCuotasMinimas) {
+      elementoCuotasMinimas.textContent = cuotasMinimas;
+    }
+    
+    if (elementoPrecancelacion) {
+      elementoPrecancelacion.classList.add('show');
+    }
     
     // Generar tabla
     this.generarTablaHTML(tabla, cuotasMinimas);
     
     // Mostrar sección de resultados
     const resultados = document.getElementById('resultados');
-    resultados.style.display = 'block';
-    resultados.scrollIntoView({ behavior: 'smooth' });
+    if (resultados) {
+      resultados.style.display = 'block';
+      
+      // Scroll suave hacia resultados
+      setTimeout(() => {
+        resultados.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 100);
+      
+      Utils.log('Resultados mostrados correctamente', 'success');
+    } else {
+      console.error('❌ No se encontró el elemento #resultados');
+    }
   },
   
   /**
