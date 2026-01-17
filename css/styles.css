@@ -408,6 +408,15 @@ tr:last-child td {
     100% { transform: rotate(360deg); }
 }
 
+/* ==================== RESULTADOS ==================== */
+#resultados {
+    display: none;
+}
+
+#resultados.show {
+    display: block;
+}
+
 /* ==================== BADGES ==================== */
 .badge {
     display: inline-block;
