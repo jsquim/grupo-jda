@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Iniciar Sesión - Grupo JDA</title>
+    <title>Login Administrador - Grupo JDA</title>
     <link rel="stylesheet" href="css/styles.css">
     <style>
         body {
@@ -44,38 +44,6 @@
             font-size: 0.9rem;
         }
         
-        .tabs {
-            display: flex;
-            margin-bottom: 30px;
-            border-bottom: 2px solid #e0e0e0;
-        }
-        
-        .tab {
-            flex: 1;
-            padding: 15px;
-            text-align: center;
-            cursor: pointer;
-            font-weight: 600;
-            color: #999;
-            transition: all 0.3s;
-            border-bottom: 3px solid transparent;
-            margin-bottom: -2px;
-        }
-        
-        .tab.active {
-            color: #667eea;
-            border-bottom-color: #667eea;
-        }
-        
-        .tab-content {
-            display: none;
-        }
-        
-        .tab-content.active {
-            display: block;
-            animation: fadeIn 0.3s ease;
-        }
-        
         .divider {
             text-align: center;
             margin: 20px 0;
@@ -95,120 +63,58 @@
         
         .divider::before { left: 0; }
         .divider::after { right: 0; }
-        
-        .success-message {
-            background: #d4edda;
-            color: #155724;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            text-align: center;
-            display: none;
-        }
     </style>
 </head>
 <body>
     <div class="login-container">
         <div class="login-card">
             <div class="logo">
-                <h1>💰 Grupo JDA</h1>
-                <p>Sistema de Gestión de Ahorros y Préstamos</p>
+                <h1>🔐 Acceso Administrador</h1>
+                <p>Grupo JDA - Sistema de Gestión</p>
             </div>
             
             <div id="alert" class="alert"></div>
-            <div id="successMessage" class="success-message"></div>
             
-            <!-- Tabs -->
-            <div class="tabs">
-                <div class="tab active" onclick="cambiarTab('login')">Iniciar Sesión</div>
-                <div class="tab" onclick="cambiarTab('registro')">Registrarse</div>
-            </div>
-            
-            <!-- Login Form -->
-            <div id="loginTab" class="tab-content active">
-                <form id="loginForm">
-                    <div class="form-group">
-                        <label for="loginEmail">📧 Correo electrónico</label>
-                        <input 
-                            type="email" 
-                            id="loginEmail" 
-                            required
-                            placeholder="tu@email.com"
-                        >
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="loginPassword">🔒 Contraseña</label>
-                        <input 
-                            type="password" 
-                            id="loginPassword" 
-                            required
-                            placeholder="Tu contraseña"
-                        >
-                    </div>
-                    
-                    <button type="submit" class="btn btn-primary" style="width: 100%;">
-                        🚀 Iniciar Sesión
-                    </button>
-                </form>
-            </div>
-            
-            <!-- Registro Form -->
-            <div id="registroTab" class="tab-content">
-                <form id="registroForm">
-                    <div class="form-group">
-                        <label for="regNombre">👤 Nombre completo</label>
-                        <input 
-                            type="text" 
-                            id="regNombre" 
-                            required
-                            placeholder="Juan Pérez"
-                        >
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="regEmail">📧 Correo electrónico</label>
-                        <input 
-                            type="email" 
-                            id="regEmail" 
-                            required
-                            placeholder="tu@email.com"
-                        >
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="regPassword">🔒 Contraseña</label>
-                        <input 
-                            type="password" 
-                            id="regPassword" 
-                            required
-                            placeholder="Mínimo 6 caracteres"
-                            minlength="6"
-                        >
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="regPasswordConfirm">🔒 Confirmar contraseña</label>
-                        <input 
-                            type="password" 
-                            id="regPasswordConfirm" 
-                            required
-                            placeholder="Repite tu contraseña"
-                            minlength="6"
-                        >
-                    </div>
-                    
-                    <button type="submit" class="btn btn-primary" style="width: 100%;">
-                        ✅ Registrarse
-                    </button>
-                </form>
-            </div>
+            <!-- Solo Login Form -->
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="loginEmail">📧 Correo electrónico</label>
+                    <input 
+                        type="email" 
+                        id="loginEmail" 
+                        required
+                        placeholder="admin@grupojda.com"
+                        autocomplete="email"
+                    >
+                </div>
+                
+                <div class="form-group">
+                    <label for="loginPassword">🔒 Contraseña</label>
+                    <input 
+                        type="password" 
+                        id="loginPassword" 
+                        required
+                        placeholder="Tu contraseña"
+                        autocomplete="current-password"
+                    >
+                </div>
+                
+                <button type="submit" class="btn btn-primary" style="width: 100%;">
+                    🚀 Iniciar Sesión
+                </button>
+            </form>
             
             <div class="divider">o</div>
             
             <button type="button" class="btn btn-secondary" style="width: 100%;" onclick="window.location.href='index.html'">
-                🧮 Ir al Simulador (Sin registro)
+                ← Volver al Simulador
             </button>
+            
+            <div style="text-align: center; margin-top: 20px;">
+                <small style="color: #999;">
+                    💡 Solo para administradores del Grupo JDA
+                </small>
+            </div>
         </div>
         
         <!-- Loading -->
@@ -218,7 +124,7 @@
         </div>
     </div>
     
-    <!-- Scripts - ORDEN IMPORTANTE -->
+    <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="js/config.js"></script>
     <script src="js/supabase-client.js"></script>
@@ -228,20 +134,3 @@
     <script src="js/auth.js"></script>
 </body>
 </html>
-```
-
-## 📋 **Resumen de la Estructura Final**
-```
-grupo-jda/
-├── index.html              ✅ Simulador principal
-├── login.html              ✅ Login/Registro
-├── css/
-│   └── styles.css         ✅ (usar el que ya tienes)
-└── js/
-    ├── config.js          ✅ Configuración central
-    ├── supabase-client.js ✅ Cliente Supabase
-    ├── utils.js           ✅ Utilidades reutilizables
-    ├── validations.js     ✅ Validaciones centralizadas
-    ├── database.js        ✅ Operaciones de BD
-    ├── auth.js            ✅ Autenticación
-    └── simulador.js       ✅ Lógica del simulador
