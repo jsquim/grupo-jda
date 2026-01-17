@@ -4,14 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simulador de Préstamos - Grupo JDA</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
     <div class="container">
-        <!-- Header -->
+        <!-- Header con botón de Login Admin -->
         <div class="card">
-            <h1>🧮 Simulador de Préstamos</h1>
-            <p class="subtitle">Grupo de Ahorros JDA • Tasa: 10% anual • Máximo: $4,000 • Plazo: hasta 36 meses</p>
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                <div>
+                    <h1>🧮 Simulador de Préstamos</h1>
+                    <p class="subtitle">Grupo de Ahorros JDA • Tasa: 10% anual • Máximo: $4,000 • Plazo: hasta 36 meses</p>
+                </div>
+                <a href="login.html" class="btn btn-secondary" style="margin: 0;">
+                    🔐 Login Administrador
+                </a>
+            </div>
         </div>
 
         <!-- Formulario de Simulación -->
@@ -128,11 +135,11 @@
             </div>
         </div>
 
-        <!-- Modal para Solicitar Nombre del Socio -->
+        <!-- Modal para Solicitar Datos del Socio -->
         <div id="modalSocio" class="modal">
             <div class="modal-content">
-                <h3>👤 Identificación del Socio</h3>
-                <p>Para enviar la solicitud a aprobación, ingresa tu nombre completo:</p>
+                <h3>👤 Identificación del Solicitante</h3>
+                <p>Para enviar la solicitud a aprobación, completa tus datos:</p>
                 
                 <div class="form-group">
                     <label for="nombreSocio">Nombre completo *</label>
@@ -153,7 +160,7 @@
                         maxlength="10"
                         required
                     >
-                    <div class="input-helper">10 dígitos</div>
+                    <div class="input-helper">10 dígitos sin guiones</div>
                 </div>
                 
                 <button type="button" class="btn btn-success" id="btnConfirmarSocio">✅ Confirmar y Enviar</button>
@@ -168,9 +175,13 @@
         </div>
     </div>
 
-    <!-- Scripts -->
+    <!-- Scripts - ORDEN IMPORTANTE -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="supabase.js"></script>
-    <script src="simulador.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/supabase-client.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/validations.js"></script>
+    <script src="js/database.js"></script>
+    <script src="js/simulador.js"></script>
 </body>
 </html>
