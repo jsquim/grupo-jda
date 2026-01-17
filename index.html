@@ -3,115 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simulador de Préstamos - Grupo JDA</title>
-    <link rel="stylesheet" href="css/styles.css">
+    <title>Simulador - Grupo JDA</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="container">
-        <!-- Header con botón de Login Admin -->
         <div class="card">
-            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
                 <div>
                     <h1>🧮 Simulador de Préstamos</h1>
-                    <p class="subtitle">Grupo de Ahorros JDA • Tasa: 10% anual • Máximo: $4,000 • Plazo: hasta 36 meses</p>
+                    <p class="subtitle">Grupo JDA • 10% anual • Máx: $4,000 • Hasta 36 meses</p>
                 </div>
-                <a href="login.html" class="btn btn-secondary" style="margin: 0;">
-                    🔐 Login Administrador
-                </a>
+                <a href="login.html" class="btn btn-secondary">🔐 Admin</a>
             </div>
         </div>
 
-        <!-- Formulario de Simulación -->
         <div class="card">
             <div id="alert" class="alert"></div>
 
-            <form id="simuladorForm">
-                <!-- Monto del Préstamo -->
+            <form id="formSimular">
                 <div class="form-group">
-                    <label for="monto">💵 Monto del préstamo *</label>
-                    <input 
-                        type="number" 
-                        id="monto" 
-                        min="100" 
-                        max="4000" 
-                        step="50" 
-                        value="1000"
-                        required
-                        placeholder="Ej: 1500"
-                    >
-                    <div class="input-helper">Entre $100 y $4,000</div>
+                    <label>💵 Monto del préstamo *</label>
+                    <input type="number" id="monto" min="100" max="4000" value="1000" required>
+                    <small>Entre $100 y $4,000</small>
                 </div>
 
-                <!-- Plazo -->
                 <div class="form-group">
-                    <label for="plazo">📅 Plazo en meses *</label>
-                    <input 
-                        type="number" 
-                        id="plazo" 
-                        min="1" 
-                        max="36" 
-                        value="12"
-                        required
-                        placeholder="Ej: 12"
-                    >
-                    <div class="input-helper">Entre 1 y 36 meses</div>
+                    <label>📅 Plazo en meses *</label>
+                    <input type="number" id="plazo" min="1" max="36" value="12" required>
+                    <small>Entre 1 y 36 meses</small>
                 </div>
 
-                <button type="submit" class="btn btn-primary">📊 Simular Préstamo</button>
+                <button type="submit" class="btn btn-primary">📊 Simular</button>
             </form>
         </div>
 
-        <!-- Resultados de la Simulación -->
-        <div id="resultados" style="display: none;">
+        <div id="resultados" style="display:none;">
             <div class="card">
-                <h2>📋 Resumen del Préstamo</h2>
+                <h2>📋 Resumen</h2>
                 
-                <div class="summary-grid">
-                    <div class="summary-item">
-                        <div class="summary-label">💵 Monto solicitado</div>
-                        <div class="summary-value" id="resumenMonto">$0.00</div>
+                <div class="resumen">
+                    <div class="item">
+                        <span>Monto:</span>
+                        <strong id="rMonto">$0</strong>
                     </div>
-                    
-                    <div class="summary-item">
-                        <div class="summary-label">📅 Plazo</div>
-                        <div class="summary-value" id="resumenPlazo">0 meses</div>
+                    <div class="item">
+                        <span>Plazo:</span>
+                        <strong id="rPlazo">0 meses</strong>
                     </div>
-                    
-                    <div class="summary-item">
-                        <div class="summary-label">💰 Cuota mensual</div>
-                        <div class="summary-value" id="resumenCuota">$0.00</div>
+                    <div class="item">
+                        <span>Cuota mensual:</span>
+                        <strong id="rCuota">$0</strong>
                     </div>
-                    
-                    <div class="summary-item">
-                        <div class="summary-label">💸 Total a pagar</div>
-                        <div class="summary-value" id="resumenTotal">$0.00</div>
+                    <div class="item">
+                        <span>Total a pagar:</span>
+                        <strong id="rTotal">$0</strong>
                     </div>
-                    
-                    <div class="summary-item">
-                        <div class="summary-label">📈 Total intereses</div>
-                        <div class="summary-value" id="resumenIntereses">$0.00</div>
+                    <div class="item">
+                        <span>Total intereses:</span>
+                        <strong id="rIntereses">$0</strong>
                     </div>
-                    
-                    <div class="summary-item">
-                        <div class="summary-label">📆 Primera cuota</div>
-                        <div class="summary-value" id="resumenPrimeraCuota" style="font-size: 1.3rem;">--</div>
-                    </div>
-                    
-                    <div class="summary-item">
-                        <div class="summary-label">📊 Tasa de interés</div>
-                        <div class="summary-value">10%</div>
+                    <div class="item">
+                        <span>Primera cuota:</span>
+                        <strong id="rFecha">--</strong>
                     </div>
                 </div>
 
-                <div class="precancelacion-info" id="precancelacionInfo">
-                    <strong>✅ Información de Precancelación:</strong><br>
-                    Podrás precancelar este préstamo después de pagar <strong id="cuotasMinimas">0</strong> cuotas 
-                    (25% del total). Esto te permitirá liquidar el saldo restante sin pagar los intereses futuros.
+                <div class="info-box">
+                    ✅ Podrás precancelar después de pagar <strong id="cuotasMin">0</strong> cuotas (25%)
                 </div>
 
-                <div class="table-container">
-                    <h3>📊 Tabla de Amortización Francesa</h3>
-                    <table id="tablaAmortizacion">
+                <h3>📊 Tabla de Amortización</h3>
+                <div class="table-responsive">
+                    <table>
                         <thead>
                             <tr>
                                 <th>#</th>
@@ -123,65 +87,194 @@
                                 <th>Saldo Final</th>
                             </tr>
                         </thead>
-                        <tbody id="tablaBody">
-                        </tbody>
+                        <tbody id="tablaBody"></tbody>
                     </table>
                 </div>
 
-                <div style="margin-top: 30px;">
-                    <button type="button" class="btn btn-success" id="btnEnviar">✅ Enviar a Aprobación</button>
-                    <button type="button" class="btn btn-secondary" onclick="location.reload()">🔄 Nueva Simulación</button>
-                </div>
+                <button class="btn btn-success" id="btnEnviar">✅ Enviar a Aprobación</button>
+                <button class="btn btn-secondary" onclick="location.reload()">🔄 Nueva Simulación</button>
             </div>
         </div>
 
-        <!-- Modal para Solicitar Datos del Socio -->
+        <!-- Modal Socio -->
         <div id="modalSocio" class="modal">
             <div class="modal-content">
-                <h3>👤 Identificación del Solicitante</h3>
-                <p>Para enviar la solicitud a aprobación, completa tus datos:</p>
-                
+                <h3>👤 Datos del Solicitante</h3>
                 <div class="form-group">
-                    <label for="nombreSocio">Nombre completo *</label>
-                    <input 
-                        type="text" 
-                        id="nombreSocio" 
-                        placeholder="Ej: Juan Pérez García"
-                        required
-                    >
+                    <label>Nombre completo *</label>
+                    <input type="text" id="nombre" required>
                 </div>
-
                 <div class="form-group">
-                    <label for="cedulaSocio">Cédula *</label>
-                    <input 
-                        type="text" 
-                        id="cedulaSocio" 
-                        placeholder="Ej: 0912345678"
-                        maxlength="10"
-                        required
-                    >
-                    <div class="input-helper">10 dígitos sin guiones</div>
+                    <label>Cédula *</label>
+                    <input type="text" id="cedula" maxlength="10" required>
                 </div>
-                
-                <button type="button" class="btn btn-success" id="btnConfirmarSocio">✅ Confirmar y Enviar</button>
-                <button type="button" class="btn btn-secondary" id="btnCancelarModal">❌ Cancelar</button>
+                <button class="btn btn-success" id="btnConfirmar">✅ Confirmar</button>
+                <button class="btn btn-secondary" id="btnCancelar">❌ Cancelar</button>
             </div>
         </div>
 
-        <!-- Loading Spinner -->
-        <div id="loadingSpinner">
+        <div id="loading" style="display:none; text-align:center; padding:20px;">
             <div class="spinner"></div>
-            <p>Procesando solicitud...</p>
+            <p>Procesando...</p>
         </div>
     </div>
 
-    <!-- Scripts - ORDEN IMPORTANTE -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="js/config.js"></script>
-    <script src="js/supabase-client.js"></script>
-    <script src="js/utils.js"></script>
-    <script src="js/validations.js"></script>
-    <script src="js/database.js"></script>
-    <script src="js/simulador.js"></script>
+    <script src="config.js"></script>
+    <script src="database.js"></script>
+    <script>
+        let simulacion = null;
+
+        // Simular préstamo
+        document.getElementById('formSimular').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const monto = parseFloat(document.getElementById('monto').value);
+            const plazo = parseInt(document.getElementById('plazo').value);
+            
+            if (monto < 100 || monto > 4000) {
+                alert('Monto debe estar entre $100 y $4,000');
+                return;
+            }
+            
+            if (plazo < 1 || plazo > 36) {
+                alert('Plazo debe estar entre 1 y 36 meses');
+                return;
+            }
+            
+            // Calcular
+            const tasa = CONFIG.tasaMensual;
+            const cuota = monto * (tasa * Math.pow(1 + tasa, plazo)) / (Math.pow(1 + tasa, plazo) - 1);
+            const total = cuota * plazo;
+            const intereses = total - monto;
+            
+            // Generar tabla
+            const tabla = [];
+            let saldo = monto;
+            const hoy = new Date();
+            
+            for (let i = 1; i <= plazo; i++) {
+                const int = saldo * tasa;
+                const cap = cuota - int;
+                const saldoFinal = Math.max(0, saldo - cap);
+                
+                let fecha = new Date(hoy);
+                if (i === 1) {
+                    fecha.setDate(fecha.getDate() + 45);
+                } else {
+                    fecha.setDate(fecha.getDate() + 45);
+                    fecha.setMonth(fecha.getMonth() + (i - 1));
+                }
+                
+                tabla.push({
+                    numero: i,
+                    fechaPago: fecha,
+                    saldoInicial: saldo,
+                    cuota: cuota,
+                    interes: int,
+                    capital: cap,
+                    saldoFinal: saldoFinal
+                });
+                
+                saldo = saldoFinal;
+            }
+            
+            // Guardar simulación
+            simulacion = { monto, plazo, cuota, total, intereses, tabla };
+            
+            // Mostrar resultados
+            document.getElementById('rMonto').textContent = '$' + monto.toFixed(2);
+            document.getElementById('rPlazo').textContent = plazo + ' meses';
+            document.getElementById('rCuota').textContent = '$' + cuota.toFixed(2);
+            document.getElementById('rTotal').textContent = '$' + total.toFixed(2);
+            document.getElementById('rIntereses').textContent = '$' + intereses.toFixed(2);
+            document.getElementById('rFecha').textContent = formatFecha(tabla[0].fechaPago);
+            document.getElementById('cuotasMin').textContent = Math.ceil(plazo * 0.25);
+            
+            // Tabla
+            const tbody = document.getElementById('tablaBody');
+            tbody.innerHTML = '';
+            tabla.forEach(f => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${f.numero}</td>
+                        <td>${formatFecha(f.fechaPago)}</td>
+                        <td>$${f.saldoInicial.toFixed(2)}</td>
+                        <td>$${f.cuota.toFixed(2)}</td>
+                        <td>$${f.interes.toFixed(2)}</td>
+                        <td>$${f.capital.toFixed(2)}</td>
+                        <td>$${f.saldoFinal.toFixed(2)}</td>
+                    </tr>
+                `;
+            });
+            
+            document.getElementById('resultados').style.display = 'block';
+            document.getElementById('resultados').scrollIntoView({ behavior: 'smooth' });
+        });
+
+        // Enviar a aprobación
+        document.getElementById('btnEnviar').addEventListener('click', function() {
+            document.getElementById('modalSocio').style.display = 'flex';
+        });
+
+        document.getElementById('btnCancelar').addEventListener('click', function() {
+            document.getElementById('modalSocio').style.display = 'none';
+        });
+
+        document.getElementById('btnConfirmar').addEventListener('click', async function() {
+            const nombre = document.getElementById('nombre').value.trim();
+            const cedula = document.getElementById('cedula').value.trim();
+            
+            if (!nombre || nombre.length < 5) {
+                alert('Ingresa tu nombre completo');
+                return;
+            }
+            
+            if (cedula.length !== 10) {
+                alert('Cédula debe tener 10 dígitos');
+                return;
+            }
+            
+            if (!confirm(`¿Confirmar solicitud?\n\nNombre: ${nombre}\nCédula: ${cedula}\nMonto: $${simulacion.monto}`)) {
+                return;
+            }
+            
+            document.getElementById('modalSocio').style.display = 'none';
+            document.getElementById('loading').style.display = 'block';
+            
+            try {
+                // Buscar o crear socio
+                const resSocio = await buscarOCrearSocio(nombre, cedula);
+                if (!resSocio.success) throw new Error(resSocio.error);
+                
+                // Crear préstamo
+                const resPrestamo = await crearPrestamo({
+                    socioId: resSocio.id,
+                    monto: simulacion.monto,
+                    plazo: simulacion.plazo,
+                    cuotaMensual: simulacion.cuota,
+                    totalPagar: simulacion.total,
+                    totalIntereses: simulacion.intereses,
+                    primeraCuota: simulacion.tabla[0].fechaPago.toISOString().split('T')[0],
+                    tabla: simulacion.tabla
+                });
+                
+                if (!resPrestamo.success) throw new Error(resPrestamo.error);
+                
+                alert(`✅ Solicitud enviada correctamente\n\nNúmero: #${resPrestamo.id}\nSolicitante: ${nombre}`);
+                location.reload();
+                
+            } catch (error) {
+                alert('❌ Error: ' + error.message);
+            } finally {
+                document.getElementById('loading').style.display = 'none';
+            }
+        });
+
+        function formatFecha(fecha) {
+            const meses = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+            return `${fecha.getDate()} ${meses[fecha.getMonth()]} ${fecha.getFullYear()}`;
+        }
+    </script>
 </body>
 </html>
