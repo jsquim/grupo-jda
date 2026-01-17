@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Iniciar Sesión - Grupo JDA</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="css/styles.css">
     <style>
         body {
             display: flex;
@@ -36,6 +36,7 @@
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
         
         .logo p {
@@ -92,28 +93,8 @@
             background: #e0e0e0;
         }
         
-        .divider::before {
-            left: 0;
-        }
-        
-        .divider::after {
-            right: 0;
-        }
-        
-        .link-button {
-            background: none;
-            border: none;
-            color: #667eea;
-            cursor: pointer;
-            font-size: 0.9rem;
-            text-decoration: underline;
-            padding: 0;
-            margin-top: 15px;
-        }
-        
-        .link-button:hover {
-            color: #5568d3;
-        }
+        .divider::before { left: 0; }
+        .divider::after { right: 0; }
         
         .success-message {
             background: #d4edda;
@@ -122,6 +103,7 @@
             border-radius: 8px;
             margin-bottom: 20px;
             text-align: center;
+            display: none;
         }
     </style>
 </head>
@@ -134,7 +116,7 @@
             </div>
             
             <div id="alert" class="alert"></div>
-            <div id="successMessage" class="success-message" style="display: none;"></div>
+            <div id="successMessage" class="success-message"></div>
             
             <!-- Tabs -->
             <div class="tabs">
@@ -168,12 +150,6 @@
                     <button type="submit" class="btn btn-primary" style="width: 100%;">
                         🚀 Iniciar Sesión
                     </button>
-                    
-                    <div style="text-align: center;">
-                        <button type="button" class="link-button" onclick="mostrarRecuperacion()">
-                            ¿Olvidaste tu contraseña?
-                        </button>
-                    </div>
                 </form>
             </div>
             
@@ -242,9 +218,30 @@
         </div>
     </div>
     
-    <!-- Scripts -->
+    <!-- Scripts - ORDEN IMPORTANTE -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="supabase.js"></script>
-    <script src="auth.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/supabase-client.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/validations.js"></script>
+    <script src="js/database.js"></script>
+    <script src="js/auth.js"></script>
 </body>
 </html>
+```
+
+## 📋 **Resumen de la Estructura Final**
+```
+grupo-jda/
+├── index.html              ✅ Simulador principal
+├── login.html              ✅ Login/Registro
+├── css/
+│   └── styles.css         ✅ (usar el que ya tienes)
+└── js/
+    ├── config.js          ✅ Configuración central
+    ├── supabase-client.js ✅ Cliente Supabase
+    ├── utils.js           ✅ Utilidades reutilizables
+    ├── validations.js     ✅ Validaciones centralizadas
+    ├── database.js        ✅ Operaciones de BD
+    ├── auth.js            ✅ Autenticación
+    └── simulador.js       ✅ Lógica del simulador
