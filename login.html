@@ -3,134 +3,69 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Administrador - Grupo JDA</title>
-    <link rel="stylesheet" href="css/styles.css">
+    <title>Login Admin - Grupo JDA</title>
+    <link rel="stylesheet" href="styles.css">
     <style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-        }
-        
-        .login-container {
-            max-width: 450px;
-            width: 100%;
-        }
-        
-        .login-card {
-            background: white;
-            border-radius: 15px;
-            padding: 40px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-        }
-        
-        .logo {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        
-        .logo h1 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        
-        .logo p {
-            color: #666;
-            font-size: 0.9rem;
-        }
-        
-        .divider {
-            text-align: center;
-            margin: 20px 0;
-            color: #999;
-            position: relative;
-        }
-        
-        .divider::before,
-        .divider::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            width: 40%;
-            height: 1px;
-            background: #e0e0e0;
-        }
-        
-        .divider::before { left: 0; }
-        .divider::after { right: 0; }
+        body { display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+        .login-box { max-width: 400px; width: 100%; }
     </style>
 </head>
 <body>
-    <div class="login-container">
-        <div class="login-card">
-            <div class="logo">
-                <h1>🔐 Acceso Administrador</h1>
-                <p>Grupo JDA - Sistema de Gestión</p>
-            </div>
+    <div class="login-box">
+        <div class="card">
+            <h1 style="text-align:center;">🔐 Administrador</h1>
+            <p style="text-align:center; color:#666; margin-bottom:30px;">Grupo JDA</p>
             
             <div id="alert" class="alert"></div>
             
-            <!-- Solo Login Form -->
-            <form id="loginForm">
+            <form id="formLogin">
                 <div class="form-group">
-                    <label for="loginEmail">📧 Correo electrónico</label>
-                    <input 
-                        type="email" 
-                        id="loginEmail" 
-                        required
-                        placeholder="admin@grupojda.com"
-                        autocomplete="email"
-                    >
+                    <label>📧 Email</label>
+                    <input type="email" id="email" value="admin@grupojda.com" required>
                 </div>
-                
                 <div class="form-group">
-                    <label for="loginPassword">🔒 Contraseña</label>
-                    <input 
-                        type="password" 
-                        id="loginPassword" 
-                        required
-                        placeholder="Tu contraseña"
-                        autocomplete="current-password"
-                    >
+                    <label>🔒 Contraseña</label>
+                    <input type="password" id="password" value="admin123" required>
                 </div>
-                
-                <button type="submit" class="btn btn-primary" style="width: 100%;">
-                    🚀 Iniciar Sesión
-                </button>
+                <button type="submit" class="btn btn-primary" style="width:100%;">Entrar</button>
             </form>
             
-            <div class="divider">o</div>
-            
-            <button type="button" class="btn btn-secondary" style="width: 100%;" onclick="window.location.href='index.html'">
-                ← Volver al Simulador
-            </button>
-            
-            <div style="text-align: center; margin-top: 20px;">
-                <small style="color: #999;">
-                    💡 Solo para administradores del Grupo JDA
-                </small>
+            <div style="text-align:center; margin-top:20px;">
+                <a href="index.html" style="color:#667eea;">← Volver al simulador</a>
             </div>
         </div>
         
-        <!-- Loading -->
-        <div id="loadingSpinner" style="display: none; text-align: center; margin-top: 20px;">
+        <div id="loading" style="display:none; text-align:center; margin-top:20px;">
             <div class="spinner"></div>
-            <p>Procesando...</p>
         </div>
     </div>
-    
-    <!-- Scripts -->
+
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="js/config.js"></script>
-    <script src="js/supabase-client.js"></script>
-    <script src="js/utils.js"></script>
-    <script src="js/validations.js"></script>
-    <script src="js/database.js"></script>
-    <script src="js/auth.js"></script>
+    <script src="config.js"></script>
+    <script src="database.js"></script>
+    <script>
+        document.getElementById('formLogin').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            document.getElementById('loading').style.display = 'block';
+            
+            const res = await login(email, password);
+            
+            document.getElementById('loading').style.display = 'none';
+            
+            if (res.success) {
+                if (res.rol === 'admin') {
+                    window.location.href = 'admin.html';
+                } else {
+                    alert('⚠️ No tienes permisos de administrador');
+                }
+            } else {
+                alert('❌ Email o contraseña incorrectos');
+            }
+        });
+    </script>
 </body>
 </html>
